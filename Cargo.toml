@@ -1,0 +1,7 @@
+[package]
+name = "rustmacrohelloworld"
+version = "0.1.0"
+authors = ["nephtys <christopher.kaag@gmail.com>"]
+
+[dependencies]
+hello-world-derive = { path = "hello-world-derive" }
