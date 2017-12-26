@@ -20,4 +20,4 @@ repository = "https://github.com/n3phtys/typescriptify"
 license = "MIT"
 
 [dependencies]
-typescriptify-derive = { path = "typescriptify-derive" }
+typescriptify-derive = "0.1"
