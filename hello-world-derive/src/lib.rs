@@ -26,7 +26,7 @@ fn impl_hello_world(ast: &syn::DeriveInput) -> quote::Tokens {
     let structname = name.to_string();
     let _body = &ast.body;
     let mut fieldlines : Vec<String> = vec![];
-    let n = match ast.body {
+    let _n = match ast.body {
         syn::Body::Struct(ref data) => {
             for field in data.fields() {
                 //field.ty; //type of the field
@@ -44,16 +44,62 @@ fn impl_hello_world(ast: &syn::DeriveInput) -> quote::Tokens {
                     },
                     syn::Ty::Path(ref _qselfopt, ref path) => {
                         let intype = format!("{}", path.segments.last().unwrap().ident);
-                        let mtyp = match intype.as_ref() {
-                            "i64" => "number".to_string(),
-                            "u32" => "number".to_string(),
-                            "u16" => "number".to_string(),
-                            "u8" => "number".to_string(),
-                            "bool" => "boolean".to_string(),
-                            "String" => "string".to_string(),
-                            "f32" => "number".to_string(),
-                            "f64" => "number".to_string(),
-                            a @ _ => a.to_string(),
+                        let generic_params_unformated = &path.segments.last().clone().unwrap().parameters;
+                        let mut generics_parameters: Vec<String> = Vec::new();
+                        match generic_params_unformated {
+                            &syn::PathParameters::AngleBracketed(ref angle_bracketed_parameter_data) => {
+                                for ty in  &angle_bracketed_parameter_data.types {
+                                    match ty {
+                                        &syn::Ty::Path(ref _qotherself, ref qotherpath) => {
+                                            generics_parameters.push(format!("{}", qotherpath.segments.last().unwrap().ident));
+                                        },
+                                        _ => unimplemented!(),
+                                    }
+                                }
+                            },
+                            _ => unimplemented!(),
+                        };
+                        //treat option special, as types in typescript are already nullable
+                        let mtyp: String = if intype.eq("Option") {
+                            generics_parameters.first().unwrap().to_string()
+                        } else {
+                            let mut generic_term_in_angle_brackets: String = if generics_parameters.is_empty() {"".to_string()} else {"<".to_string()};
+                            for gen in &generics_parameters {
+                                if generic_term_in_angle_brackets.len() > 1 {
+                                    generic_term_in_angle_brackets = generic_term_in_angle_brackets + ", ";
+                                }
+                                generic_term_in_angle_brackets = generic_term_in_angle_brackets + match gen.as_ref() {
+                                    "i64" => "number",
+                                    "u32" => "number",
+                                    "u16" => "number",
+                                    "u8" => "number",
+                                    "bool" => "boolean",
+                                    "String" => "string",
+                                    "f32" => "number",
+                                    "f64" => "number",
+                                    "HashMap" => "Map",
+                                    "Vec" => "Array",
+                                    "HashSet" => "Array",
+                                    a @ _ => a,
+                                };
+                            }
+                            if !generics_parameters.is_empty() {
+                                generic_term_in_angle_brackets = generic_term_in_angle_brackets +">";
+                            }
+                            (match intype.as_ref() {
+                                "i64" => "number".to_string(),
+                                "u32" => "number".to_string(),
+                                "u16" => "number".to_string(),
+                                "u8" => "number".to_string(),
+                                "bool" => "boolean".to_string(),
+                                "String" => "string".to_string(),
+                                "f32" => "number".to_string(),
+                                "f64" => "number".to_string(),
+                                 "HashMap" => "Map".to_string(),
+                                 "Vec" => "Array".to_string(),
+                                 "HashSet" => "Array".to_string(),
+                                a @ _ => a.to_string(),
+                            } + &generic_term_in_angle_brackets)
                         };
                         fieldlines.push(format!("{}: {};", fieldname, mtyp));
                     },
@@ -72,16 +118,8 @@ fn impl_hello_world(ast: &syn::DeriveInput) -> quote::Tokens {
     let complete_string: String = format!("export interface {} {{ \n {}}}", structname, s);
     quote! {
         impl HelloWorld for #name {
-            fn hello_world() {
-                println!("Hello, World! My name is {} and i have {} fields", stringify!(#name), #n);
-            }
-
-            fn as_typescript_interface_definition() -> String {
+            fn typescript_interface() -> String {
                 format!("{}\n", #complete_string)
-            }
-
-            fn as_typescript_type() -> String {
-                format!("{}\n", stringify!(#name))
             }
         }
     }
