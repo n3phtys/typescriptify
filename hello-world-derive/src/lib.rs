@@ -20,6 +20,7 @@ pub fn hello_world(input: TokenStream) -> TokenStream {
     gen.parse().unwrap()
 }
 
+
 fn impl_hello_world(ast: &syn::DeriveInput) -> quote::Tokens {
     let name = &ast.ident;
     let structname = name.to_string();
@@ -42,7 +43,7 @@ fn impl_hello_world(ast: &syn::DeriveInput) -> quote::Tokens {
                         unimplemented!()
                     },
                     syn::Ty::Path(ref _qselfopt, ref path) => {
-                        fieldlines.push(format!("{}: {:?};", fieldname, path));
+                        fieldlines.push(format!("{} : {} ;", fieldname, path.segments.last().unwrap().ident));
                     },
                     _ => unimplemented!(),
                 }
@@ -56,15 +57,19 @@ fn impl_hello_world(ast: &syn::DeriveInput) -> quote::Tokens {
     for fieldline in fieldlines {
         s = s + &fieldline + "\n";
     }
-    let complete_string: String = format!("export interface {} {{\n {} \n}}", structname, s);
+    let complete_string: String = format!("export interface {} {{ \n {} \n }}", structname, s);
     quote! {
         impl HelloWorld for #name {
             fn hello_world() {
                 println!("Hello, World! My name is {} and i have {} fields", stringify!(#name), #n);
             }
 
-            fn to_typescript_interface() -> String {
-                format!("{}\n", #complete_string)
+            fn as_typescript_interface_definition() -> String {
+                format!("{}\n", stringify!(#complete_string))
+            }
+
+            fn as_typescript_type() -> String {
+                format!("{}\n", stringify!(#name))
             }
         }
     }
