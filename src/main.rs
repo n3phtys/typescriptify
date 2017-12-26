@@ -1,14 +1,14 @@
 #[macro_use]
-extern crate hello_world_derive;
+extern crate typescriptify_derive;
 
 use std::collections::HashSet;
 use std::collections::HashMap;
 
-trait HelloWorld {
-    fn typescript_interface() -> String;
+trait TypeScriptifyTrait {
+    fn type_script_ify() -> String;
 }
 
-#[derive(HelloWorld)]
+#[derive(TypeScriptify)]
 struct FrenchToast {
     pub i : u32,
     pub v : Vec<u8>,
@@ -17,7 +17,7 @@ struct FrenchToast {
     pub optional: Option<bool>,
 }
 
-#[derive(HelloWorld)]
+#[derive(TypeScriptify)]
 struct Waffles {
     pub t : i64,
     pub x : bool,
@@ -27,7 +27,7 @@ struct Waffles {
 fn main() {
     //FrenchToast::hello_world();
     //Waffles::hello_world();
-    println!("Typescript output for Waffles: \n{}", Waffles::typescript_interface() );
-    println!("Typescript output for FrenchToast: \n{}", FrenchToast::typescript_interface() );
+    println!("Typescript output for Waffles: \n{}", Waffles::type_script_ify() );
+    println!("Typescript output for FrenchToast: \n{}", FrenchToast::type_script_ify() );
     //println!("Typescript type for Waffles: \n{}", Waffles::as_typescript_type() );
 }

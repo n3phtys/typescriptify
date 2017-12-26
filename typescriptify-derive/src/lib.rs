@@ -5,7 +5,7 @@ extern crate quote;
 
 use proc_macro::TokenStream;
 
-#[proc_macro_derive(HelloWorld)]
+#[proc_macro_derive(TypeScriptify)]
 pub fn hello_world(input: TokenStream) -> TokenStream {
     // Construct a string representation of the type definition
     let s = input.to_string();
@@ -61,7 +61,20 @@ fn impl_hello_world(ast: &syn::DeriveInput) -> quote::Tokens {
                         };
                         //treat option special, as types in typescript are already nullable
                         let mtyp: String = if intype.eq("Option") {
-                            generics_parameters.first().unwrap().to_string()
+                            (match generics_parameters.first().unwrap().as_ref() {
+                                "i64" => "number",
+                                "u32" => "number",
+                                "u16" => "number",
+                                "u8" => "number",
+                                "bool" => "boolean",
+                                "String" => "string",
+                                "f32" => "number",
+                                "f64" => "number",
+                                "HashMap" => "Map",
+                                "Vec" => "Array",
+                                "HashSet" => "Array",
+                                a @ _ => a,
+                            }).to_string()
                         } else {
                             let mut generic_term_in_angle_brackets: String = if generics_parameters.is_empty() {"".to_string()} else {"<".to_string()};
                             for gen in &generics_parameters {
@@ -105,7 +118,6 @@ fn impl_hello_world(ast: &syn::DeriveInput) -> quote::Tokens {
                     },
                     _ => unimplemented!(),
                 }
-                //fieldlines.push(format!("{}: {};", field.ident.unwrap().to_string(), field.ty.get_type_id().to_string()));
             }
             data.fields().len()
         },
@@ -113,12 +125,12 @@ fn impl_hello_world(ast: &syn::DeriveInput) -> quote::Tokens {
     };
     let mut s = "".to_string();
     for fieldline in fieldlines {
-        s = s + "\t" + &fieldline + "\n";
+        s = s + "    " + &fieldline + "\n";
     }
-    let complete_string: String = format!("export interface {} {{ \n {}}}", structname, s);
+    let complete_string: String = format!("export interface {} {{\n{}}}", structname, s);
     quote! {
-        impl HelloWorld for #name {
-            fn typescript_interface() -> String {
+        impl TypeScriptifyTrait for #name {
+            fn type_script_ify() -> String {
                 format!("{}\n", #complete_string)
             }
         }

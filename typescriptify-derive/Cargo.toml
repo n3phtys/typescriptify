@@ -1,5 +1,5 @@
 [package]
-name = "hello-world-derive"
+name = "typescriptify-derive"
 version = "0.1.0"
 authors = ["nephtys <christopher.kaag@gmail.com>"]
 
