@@ -43,7 +43,19 @@ fn impl_hello_world(ast: &syn::DeriveInput) -> quote::Tokens {
                         unimplemented!()
                     },
                     syn::Ty::Path(ref _qselfopt, ref path) => {
-                        fieldlines.push(format!("{} : {} ;", fieldname, path.segments.last().unwrap().ident));
+                        let intype = format!("{}", path.segments.last().unwrap().ident);
+                        let mtyp = match intype.as_ref() {
+                            "i64" => "number".to_string(),
+                            "u32" => "number".to_string(),
+                            "u16" => "number".to_string(),
+                            "u8" => "number".to_string(),
+                            "bool" => "boolean".to_string(),
+                            "String" => "string".to_string(),
+                            "f32" => "number".to_string(),
+                            "f64" => "number".to_string(),
+                            a @ _ => a.to_string(),
+                        };
+                        fieldlines.push(format!("{}: {};", fieldname, mtyp));
                     },
                     _ => unimplemented!(),
                 }
@@ -55,9 +67,9 @@ fn impl_hello_world(ast: &syn::DeriveInput) -> quote::Tokens {
     };
     let mut s = "".to_string();
     for fieldline in fieldlines {
-        s = s + &fieldline + "\n";
+        s = s + "\t" + &fieldline + "\n";
     }
-    let complete_string: String = format!("export interface {} {{ \n {} \n }}", structname, s);
+    let complete_string: String = format!("export interface {} {{ \n {}}}", structname, s);
     quote! {
         impl HelloWorld for #name {
             fn hello_world() {
@@ -65,7 +77,7 @@ fn impl_hello_world(ast: &syn::DeriveInput) -> quote::Tokens {
             }
 
             fn as_typescript_interface_definition() -> String {
-                format!("{}\n", stringify!(#complete_string))
+                format!("{}\n", #complete_string)
             }
 
             fn as_typescript_type() -> String {
