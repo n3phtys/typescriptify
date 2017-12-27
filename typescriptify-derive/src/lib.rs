@@ -63,10 +63,15 @@ fn impl_hello_world(ast: &syn::DeriveInput) -> quote::Tokens {
                         //treat option special, as types in typescript are already nullable
                         let mtyp: String = if intype.eq("Option") {
                             (match generics_parameters.first().unwrap().as_ref() {
+                                "i8" => "number",
+                                "i16" => "number",
+                                "i32" => "number",
                                 "i64" => "number",
-                                "u32" => "number",
-                                "u16" => "number",
                                 "u8" => "number",
+                                "u16" => "number",
+                                "u32" => "number",
+                                "u64" => "number",
+                                "usize" => "number",
                                 "bool" => "boolean",
                                 "String" => "string",
                                 "f32" => "number",
@@ -83,10 +88,15 @@ fn impl_hello_world(ast: &syn::DeriveInput) -> quote::Tokens {
                                     generic_term_in_angle_brackets = generic_term_in_angle_brackets + ", ";
                                 }
                                 generic_term_in_angle_brackets = generic_term_in_angle_brackets + match gen.as_ref() {
+                                    "i8" => "number",
+                                    "i16" => "number",
+                                    "i32" => "number",
                                     "i64" => "number",
-                                    "u32" => "number",
-                                    "u16" => "number",
                                     "u8" => "number",
+                                    "u16" => "number",
+                                    "u32" => "number",
+                                    "u64" => "number",
+                                    "usize" => "number",
                                     "bool" => "boolean",
                                     "String" => "string",
                                     "f32" => "number",
@@ -101,10 +111,15 @@ fn impl_hello_world(ast: &syn::DeriveInput) -> quote::Tokens {
                                 generic_term_in_angle_brackets = generic_term_in_angle_brackets + ">";
                             }
                             (match intype.as_ref() {
+                                "i8" => "number".to_string(),
+                                "i16" => "number".to_string(),
+                                "i32" => "number".to_string(),
                                 "i64" => "number".to_string(),
-                                "u32" => "number".to_string(),
-                                "u16" => "number".to_string(),
                                 "u8" => "number".to_string(),
+                                "u16" => "number".to_string(),
+                                "u32" => "number".to_string(),
+                                "u64" => "number".to_string(),
+                                "usize" => "number".to_string(),
                                 "bool" => "boolean".to_string(),
                                 "String" => "string".to_string(),
                                 "f32" => "number".to_string(),

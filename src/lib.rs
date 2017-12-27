@@ -25,6 +25,7 @@ mod tests {
     #[derive(TypeScriptify)]
     struct Waffles {
         pub t: i64,
+        pub s: usize,
         pub x: bool,
         pub subtoast: FrenchToast,
     }
@@ -40,6 +41,7 @@ mod tests {
         Sugar {
             i: u32,
             x: u64,
+            s: usize,
             optional: Option<bool>,
             v: Vec<u8>,
         },
