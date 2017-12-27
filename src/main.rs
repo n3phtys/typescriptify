@@ -24,10 +24,26 @@ struct Waffles {
     pub subtoast : FrenchToast,
 }
 
+#[derive(TypeScriptify)]
+pub enum Sweet {
+    Caroline {
+        x : i64,
+        b : bool,
+        hashmap: HashMap<String, u16>,
+        hashset: HashSet<u32>,
+    },
+    Sugar {
+        i : u32,
+        optional: Option<bool>,
+        v : Vec<u8>,
+    }
+}
+
 fn main() {
     //FrenchToast::hello_world();
     //Waffles::hello_world();
     println!("Typescript output for Waffles: \n{}", Waffles::type_script_ify() );
     println!("Typescript output for FrenchToast: \n{}", FrenchToast::type_script_ify() );
+    println!("Typescript output for Sweet: \n{}", Sweet::type_script_ify() );
     //println!("Typescript type for Waffles: \n{}", Waffles::as_typescript_type() );
 }

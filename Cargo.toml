@@ -1,6 +1,6 @@
 [package]
 name = "typescriptify"
-version = "0.1.0"
+version = "0.1.1"
 authors = ["nephtys <christopher.kaag@gmail.com>"]
 
 # A short blurb about the package. This is not rendered in any format when
@@ -20,4 +20,5 @@ repository = "https://github.com/n3phtys/typescriptify"
 license = "MIT"
 
 [dependencies]
-typescriptify-derive = "0.1"
+#typescriptify-derive = "0.1"
+typescriptify-derive = { path = "typescriptify-derive" }
