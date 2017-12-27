@@ -39,19 +39,31 @@ mod tests {
         },
         Sugar {
             i: u32,
+            x: u64,
             optional: Option<bool>,
             v: Vec<u8>,
         },
     }
 
 
+    #[derive(TypeScriptify)]
+    pub enum Enum {
+        Created,
+        Finalized,
+        ExportedAtLeastOnce,
+    }
+
+
     #[test]
     fn test_works() {
+
+
+        let r = format!("Typescript output for Enum: \n{}", Enum::type_script_ify());
         let x = format!("Typescript output for Waffles: \n{}", Waffles::type_script_ify());
         let y = format!("Typescript output for FrenchToast: \n{}", FrenchToast::type_script_ify());
         let z = format!("Typescript output for Sweet: \n{}", Sweet::type_script_ify());
 
-        println!("Typescript outputs:\n{}\n{}\n{}\n", x, y, z);
+        println!("Typescript outputs:\n{}\n{}\n{}\n{}\n", r, x, y, z);
 
         assert_eq!(x.contains("subtoast: FrenchToast"), true);
         assert_eq!(y.contains("hashmap: Map<string, number>"), true);
