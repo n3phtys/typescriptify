@@ -34,7 +34,7 @@ fn impl_hello_world(ast: &syn::DeriveInput) -> quote::Tokens {
                 //field.ident; //name (tuple struct fields have none here)
                 //field.vis; //visibility
                 //field.attrs; //attributes
-                println!("Fieldtype = {:?} and Name = {:?}", field.ty, field.ident);
+                //println!("Fieldtype = {:?} and Name = {:?}", field.ty, field.ident);
                 let fieldname: String = format!("{}", field.ident.clone().unwrap().to_string());
                 match field.ty {
                     syn::Ty::Array(ref _b, ref _c) => {
@@ -79,6 +79,7 @@ fn impl_hello_world(ast: &syn::DeriveInput) -> quote::Tokens {
                                 "HashMap" => "Map",
                                 "Vec" => "Array",
                                 "HashSet" => "Array",
+                                "Value" => "any",
                                 a @ _ => a,
                             }).to_string()
                         } else {
@@ -104,6 +105,7 @@ fn impl_hello_world(ast: &syn::DeriveInput) -> quote::Tokens {
                                     "HashMap" => "Map",
                                     "Vec" => "Array",
                                     "HashSet" => "Array",
+                                    "Value" => "any",
                                     a @ _ => a,
                                 };
                             }
@@ -127,6 +129,7 @@ fn impl_hello_world(ast: &syn::DeriveInput) -> quote::Tokens {
                                 "HashMap" => "Map".to_string(),
                                 "Vec" => "Array".to_string(),
                                 "HashSet" => "Array".to_string(),
+                                "Value" => "any".to_string(),
                                 a @ _ => a.to_string(),
                             } + &generic_term_in_angle_brackets)
                         };
@@ -161,7 +164,7 @@ fn impl_hello_world(ast: &syn::DeriveInput) -> quote::Tokens {
                     //field.ident; //name (tuple struct fields have none here)
                     //field.vis; //visibility
                     //field.attrs; //attributes
-                    println!("Fieldtype = {:?} and Name = {:?}", field.ty, field.ident);
+                    //println!("Fieldtype = {:?} and Name = {:?}", field.ty, field.ident);
                     let fieldname: String = format!("{}", field.ident.clone().unwrap().to_string());
                     match field.ty {
                         syn::Ty::Array(ref _b, ref _c) => {
@@ -206,6 +209,7 @@ fn impl_hello_world(ast: &syn::DeriveInput) -> quote::Tokens {
                                     "HashMap" => "Map",
                                     "Vec" => "Array",
                                     "HashSet" => "Array",
+                                    "Value" => "any",
                                     a @ _ => a,
                                 }).to_string()
                             } else {
@@ -231,6 +235,7 @@ fn impl_hello_world(ast: &syn::DeriveInput) -> quote::Tokens {
                                         "HashMap" => "Map",
                                         "Vec" => "Array",
                                         "HashSet" => "Array",
+                                        "Value" => "any",
                                         a @ _ => a,
                                     };
                                 }
@@ -254,6 +259,7 @@ fn impl_hello_world(ast: &syn::DeriveInput) -> quote::Tokens {
                                     "HashMap" => "Map".to_string(),
                                     "Vec" => "Array".to_string(),
                                     "HashSet" => "Array".to_string(),
+                                    "Value" => "any".to_string(),
                                     a @ _ => a.to_string(),
                                 } + &generic_term_in_angle_brackets)
                             };
